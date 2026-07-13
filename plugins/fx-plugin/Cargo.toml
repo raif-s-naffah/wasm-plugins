@@ -1,7 +1,8 @@
 [package]
 name = "fx-plugin"
+description = "Hashing implementation using fxhash"
+version = "0.1.0"
 authors.workspace = true
-version.workspace = true
 edition.workspace = true
 repository.workspace = true
 license.workspace = true
@@ -11,7 +12,6 @@ categories.workspace = true
 [dependencies]
 hashing = { workspace = true }
 fxhash = "0.2.1"
-paste = { workspace = true }
 
 [lib]
 crate-type = ["cdylib"]

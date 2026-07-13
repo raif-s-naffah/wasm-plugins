@@ -22,6 +22,7 @@ target
 
 .env
 .vscode
+attic
 Cargo.lock
 Cargo.tree
 server/plugins

@@ -4,7 +4,6 @@ resolver = "3"
 
 [workspace.package]
 authors = ["Raif S. Naffah <raif@mailbox.org>"]
-version = "0.1.0"
 edition = "2024"
 repository = "https://github.com/raif-s-naffah/wasm-plugins"
 license = "GPL-3.0-or-later"
@@ -12,8 +11,8 @@ keywords = ["PoC", "WASM", "WASIp1", "Plugin"]
 categories = ["runtime-plugins", "rust-patterns", "wasm"]
 
 [workspace.dependencies]
-hashing = { path = "interfaces/hashing" }
-paste = "1.0.15"
+# hashing = { path = "interfaces/hashing" }
+hashing = { version = "0.1.0", path = "interfaces/hashing" }
 wasmtime = "46.0.1"
 wasmtime-wasi = "46.0.1"
 
