@@ -6,7 +6,7 @@ use std::{
     io::{Error, ErrorKind},
     path::PathBuf,
 };
-use wasmtime::{Engine, Instance, InstancePre, Linker, Module, Store};
+use wasmtime::{Engine, ExternType, Instance, InstancePre, Linker, Module, Store};
 use wasmtime_wasi::{
     WasiCtxBuilder,
     p1::{self, WasiP1Ctx},
@@ -59,12 +59,12 @@ pub struct PluginManager {
 
     /// NOTE (rsn) 20260713 - we cache the [InstancePre] so (a) we dont have to
     /// verify WASM multiple times, and (b) instantiate many instances faster.
-    /// this maps module/plugin ID to their [InstancePre].
+    /// this maps module (a.k.a. plugin) ID to their [InstancePre].
     templates: HashMap<String, InstancePre<WasiP1Ctx>>,
 
-    /// Mappings of IDs to Wasmtime Instances. An instance ID is a concatenation
-    /// of a plugin/module ID and an instance number/order spearated by '/'; e.g.
-    /// 'fx/100'.
+    /// Mappings of IDs to Wasmtime Instances. A key here is a concatenation of
+    /// a module (a.k.a. plugin) ID and an instance number/order spearated by
+    /// '/'; e.g. 'fx/100'.
     instances: HashMap<String, Instance>,
 }
 
@@ -101,6 +101,31 @@ impl PluginManager {
     pub fn load_plugin(&mut self, mid: &str) -> Result<(), WasmPluginError> {
         let plugin_wasm_file = plugin_loc(mid)?;
         let module = Module::from_file(&self.engine, plugin_wasm_file)?;
+
+        // ensure it exports 'memory' as a WASI P1 component should...
+        let memory = module
+            .get_export("memory")
+            .ok_or(WasmPluginError::Runtime(format!(
+                "'memory' export was NOT found in plugin '{}'",
+                mid
+            )))?;
+        match memory {
+            ExternType::Memory(memory_type) => {
+                // ensure it's NOT shared...
+                if memory_type.is_shared() {
+                    return Err(WasmPluginError::Runtime(format!(
+                        "Plugin '{}' exports its memory as shared :(",
+                        mid
+                    )));
+                }
+            }
+            _ => {
+                return Err(WasmPluginError::Runtime(format!(
+                    "Plugin '{}' does NOT export its memory as expected :(",
+                    mid
+                )));
+            }
+        };
 
         let instance_pre = self.linker.instantiate_pre(&module)?;
         self.templates.insert(mid.to_owned(), instance_pre);
@@ -174,8 +199,8 @@ impl PluginManager {
         // invoke the function...
         let result = func.call(&mut self.store, (seed, salt, 0, length as u32))?;
 
-        // TODO (rsn) 20260713 - is it safe to leave the data in linear memory?
-        // or should i zeroe it before leaving???
+        // scrub the used linear memory for peace of mind...
+        linear_mem.data_mut(&mut self.store)[0..length].fill(0x00);
 
         Ok(result)
     }

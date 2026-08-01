@@ -11,10 +11,9 @@ keywords = ["PoC", "WASM", "WASIp1", "Plugin"]
 categories = ["runtime-plugins", "rust-patterns", "wasm"]
 
 [workspace.dependencies]
-# hashing = { path = "interfaces/hashing" }
 hashing = { version = "0.1.0", path = "interfaces/hashing" }
-wasmtime = "46.0.1"
-wasmtime-wasi = "46.0.1"
+wasmtime = "47.0.3"
+wasmtime-wasi = "47.0.3"
 
 [profile.release]
 opt-level = "z"

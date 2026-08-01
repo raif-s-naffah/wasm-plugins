@@ -4,10 +4,12 @@ Proof of Concept for creating and using [WASM](https://webassembly.org/) plugins
 ## Why
 This project demonstrates how can Rust plugins packaged as [WebAssembly System Interface (WASI) Preview 1](https://github.com/WebAssembly/WASI) be built and used by a "server" logic that loads + use them at runtime; i.e. no compile-time knowledge except for the _Trait(s)_ they're supposed to implement, and where their WASM files are to be found.
 
-Normally you would use an Interface Definition Language (IDL) to specify the _Interface(s)_ those plugins are supposed to implement, generate language specific bindings for them, and later in the server/app that will be using them, load + interact w/ them through some runtime layer.  For WASI, the IDL is the WIT (WASM Interface Type) language.  A [`wit-bindgen`](https://crates.io/crates/wit-bindgen) crate[^1], and [`wit-bindgen-cli`](https://crates.io/crates/wit-bindgen-cli)[^2], should theoretically generate working Rust traits and macros to use. I however was not able to use those resources to generate and re-use a clean Rust crate representing the _Interface_, instead i hand-crafted those learning from the generated source produced by the CLI tool.  The original WIT source looked like this...
+Normally you would use an Interface Definition Language (IDL) to specify the _Interface(s)_ those plugins are supposed to implement, generate language specific bindings for them, and later in the server/app that will be using them, load + interact w/ them through some runtime layer.  For WASI, the IDL is the WIT (WASM Interface Type) language.  A [`wit-bindgen`](https://crates.io/crates/wit-bindgen) crate[^1], and [`wit-bindgen-cli`](https://crates.io/crates/wit-bindgen-cli)[^2], should theoretically generate working Rust traits and macros to use.  I however was not able to use those resources to generate and re-use a clean Rust crate representing the _Interface_ without additional edits to the resulting _Guest_ trait.
+
+Besides, for a simple interface, w/ a single stateless function like the one described here, a simple macro to generate the `C` Foreign Function Interface (FFI) wrapper was not too hard.  The original WIT source looked like this...
 
 ```text
-package services:api@0.1.0;
+package wit:api@0.1.0;
 
 interface hashing {
   hash: func(seed: u32, salt: u32, data: string) -> u32;

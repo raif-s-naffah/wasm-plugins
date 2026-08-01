@@ -1,3 +1,17 @@
+# 2026-08-01
+
+workspace:
+* Upgrade dependencies to latest versions.
+* Updated README.
+
+server:
+* Scrub used linear memory before returning result.
+* add basic verification when loading the a Module re. its 'memory' export.
+
+plugins/xx-plugin:
+* fine-tune features list of `twox-hash` dependency.
+
+
 # 2026-07-13
 
 interfaces/hashing:
