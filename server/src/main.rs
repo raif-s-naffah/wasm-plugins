@@ -18,8 +18,8 @@ fn main() -> Result<(), WasmPluginError> {
     let mut pm = PluginManager::default();
 
     // load plugins/modules...
-    pm.load_plugin(FX_PLUGIN_ID)?;
-    pm.load_plugin(XX_PLUGIN_ID)?;
+    pm.load(XX_PLUGIN_ID)?;
+    pm.load(FX_PLUGIN_ID)?;
 
     // ready...
     let seed: u32 = 100;
@@ -27,15 +27,15 @@ fn main() -> Result<(), WasmPluginError> {
     let data = "1 if by land, 2 if by sea";
 
     // let res_xx = pm.call_hash("xx/1", seed, salt, data)?;
-    let res_xx = pm.call_hash("xx", seed, salt, data)?;
-    let res_fx = pm.call_hash("fx/1", seed, salt, data)?;
+    let res_xx = pm.call_hash(XX_PLUGIN_ID, seed, salt, data)?;
+    let res_fx = pm.call_hash(FX_PLUGIN_ID, seed, salt, data)?;
 
     println!("[DEBUG] res_xx = {}", res_xx);
     assert_eq!(res_xx, XX_TV);
     println!("[DEBUG] res_fx = {}", res_fx);
     assert_eq!(res_fx, FX_TV);
 
-    let res_xx2 = pm.call_hash("xx/2", seed, salt, data)?;
+    let res_xx2 = pm.call_hash(XX_PLUGIN_ID, seed, salt, data)?;
     println!("[DEBUG] res_xx2 = {}", res_xx2);
     assert_eq!(res_xx, res_xx2);
 

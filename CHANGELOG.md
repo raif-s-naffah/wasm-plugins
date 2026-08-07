@@ -1,3 +1,17 @@
+# 2026-08-07
+
+workspace:
+* Added more + improved comments.
+
+server:
+* Find out more about WASM and WASI memory.  Specifically if + how to limit
+  memory page-size, page-count, and total memory allocated when loading modules
+  and attempting to limit Store's resources grow.
+* Output allocated WASM linear memory size when loading a Module.
+* Introduce and use a maximum size limit of user data.
+* Ensure PluginManager never exceeds plugin and instance count limits.
+
+
 # 2026-08-01
 
 workspace:
