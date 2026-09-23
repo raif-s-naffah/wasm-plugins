@@ -1,3 +1,12 @@
+# 2026-09-23
+
+workspace:
+* Upgrade dependencies to latest versions (`wasmtime[-wasi]@49.0.0`).
+
+plugins (plugins/xx-plugin):
+* Upgrade dependencies to latest versions (`twox-hash@2.1.4`).
+
+
 # 2026-08-07
 
 workspace:
