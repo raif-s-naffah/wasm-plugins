@@ -1,3 +1,13 @@
+# 2026-09-25
+
+workspace:
+* Upgrade dependencies to latest versions (`wasmtime[-wasi]@49.0.1`).
+* Bind WASM to WASI P2.
+
+server (plugins/xx-plugin):
+* Upgrade dependencies to latest versions (`thiserror@2.0.21`).
+
+
 # 2026-09-23
 
 workspace:

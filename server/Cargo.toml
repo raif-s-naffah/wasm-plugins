@@ -11,6 +11,6 @@ categories.workspace = true
 
 [dependencies]
 hashing = { workspace = true }
-thiserror = "2.0.18"
+thiserror = "2.0.21"
 wasmtime = { workspace = true }
 wasmtime-wasi = { workspace = true }
